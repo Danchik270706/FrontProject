@@ -1,0 +1,455 @@
+
+
+
+
+
+
+Вы сказали:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1></h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search movies...">
+      <div id="suggestion-box"></div>
+    </div>
+    <button id="view-wishlist">Wishlist</button>
+  </header>
+
+  <main>
+    <div id="movie-grid"></div>
+  </main>
+
+  <div id="movie-details-modal" class="modal">
+    <div id="movie-details"></div>
+    <button id="close-button">Close</button>
+</div>
+
+
+  <div id="wishlist" class="modal">
+    <div class="modal-content">
+        <span id="close-wishlist" class="close-button">&times;</span> <!-- Close button for modal -->
+        <h2>Whislist</h2>
+        <div id="wishlist-content"></div>
+        <button id="close-wishlist-button">Закрыть</button> <!-- Close button for wishlist -->
+    </div>
+</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f3f3f3;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-image: url('marvel.jpg'); /* Замените на URL вашего изображения */
+  background-size: cover; /* Изображение будет растягиваться, чтобы покрыть весь заголовок */
+  background-position: center; /* Центрирование изображения */
+  color: #fff; /* Цвет текста для контраста */
+  position: relative;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.search-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+#search-input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+#suggestion-box {
+  position: absolute;
+  top: 40px; /* Position below the search input */
+  width: 300px; /* Matches the width of #search-input */
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow effect */
+}
+
+#suggestion-box div {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px; /* Font size */
+  color: #333; /* Text color */
+}
+
+#suggestion-box div:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+#view-wishlist {
+  background-color: #555;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+#movie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  gap: 20px;
+}
+
+.movie-card {
+  position: relative;
+  width: 200px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.1);
+}
+
+.movie-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: 90%; /* Set width to 80% of the viewport */
+  max-width: 600px; /* Set a maximum width */
+  max-height: 80%; /* Limit height to 75% of the viewport */
+  overflow-y: auto; /* Allow vertical scrolling */
+}
+
+
+#wishlist {
+  display: none; /* Hidden by default */
+  position: absolute; /* Positioned relative to modal */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Offset by half of its width and height */
+  background-color: white; /* White background */
+  padding: 20px; /* Padding inside the modal */
+  border-radius: 8px; /* Rounded corners */
+  width: 80%; /* Width of the modal */
+  max-width: 600px; /* Max width */
+  height: auto; /* Height is auto */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+#wishlist h2 {
+  margin: 0 0 20px; /* Margin for the title */
+}
+
+#wishlist-content {
+  max-height: 400px; /* Max height for the content */
+  overflow-y: auto; /* Enable scrolling for content */
+}
+
+#wishlist-content div {
+  margin-bottom: 10px; /* Spacing between movies */
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+}
+
+#wishlist-content img {
+  width: 50px; /* Width for movie poster */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 10px; /* Space between image and title */
+}
+
+#close-button,
+#close-wishlist {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #555;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#close-wishlist {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+
+const apiKey = 'e6af60ef3a5daccaa6df1939e78bb577'; 
+const searchInput = document.getElementById('search-input');
+const suggestionBox = document.getElementById('suggestion-box');
+const movieGrid = document.getElementById('movie-grid');
+const movieDetailsModal = document.getElementById('movie-details-modal');
+const movieDetails = document.getElementById('movie-details');
+const closeButton = document.getElementById('close-button');
+const viewWishlistButton = document.getElementById('view-wishlist');
+const wishlistContainer = document.getElementById('wishlist');
+
+let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+
+// Fetch popular movies on initial load
+fetchMovies();
+
+// Search functionality
+searchInput.addEventListener('input', async () => {
+    const query = searchInput.value;
+    if (query.length > 2) {
+        const response = await fetch(https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query});
+        const data = await response.json();
+        displayMovies(data.results); // Display the search results
+        displaySuggestions(data.results); // Show suggestions based on search
+    } else {
+        suggestionBox.innerHTML = '';
+        fetchMovies(); // Reload popular movies if search input is cleared
+    }
+});
+
+// Display movies in the grid
+function displayMovies(movies) {
+    movieGrid.innerHTML = ''; // Clear previous movies
+    if (movies.length === 0) {
+        movieGrid.innerHTML = '<p>No movies found.</p>'; // Message if no results
+    } else {
+        movies.forEach(movie => {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.innerHTML = 
+                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}" />
+                <h3>${movie.title}</h3>
+                <p>Release Date: ${movie.release_date}</p>
+                <button onclick="addToWatchlist(${movie.id}, '${movie.title}', '${movie.poster_path}')">Add to WhishList</button>
+                <button onclick="openMovieDetails(${movie.id})">More Info</button>
+            ;
+            movieGrid.appendChild(card);
+        });
+    }
+}
+
+// Fetch and display movies
+async function fetchMovies() {
+    const response = await fetch(https://api.themoviedb.org/3/movie/popular?api_key=${apiKey});
+    const data = await response.json();
+    displayMovies(data.results); // Display popular movies
+}
+
+
+function displayMovies(movies) {
+    movieGrid.innerHTML = '';
+    movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+        card.innerHTML = 
+            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}" />
+            <h3>${movie.title}</h3>
+            <p>Release Date: ${movie.release_date}</p>
+            <button onclick="addToWatchlist(${movie.id}, '${movie.title}', '${movie.poster_path}')">Add to WhishList</button>
+            <button onclick="openMovieDetails(${movie.id})">More Info</button>
+        ;
+        movieGrid.appendChild(card);
+    });
+}
+
+// Open movie details modal
+async function openMovieDetails(movieId) {
+    const response = await fetch(https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey});
+    const movie = await response.json();
+    displayMovieDetails(movie);
+}
+
+function displayMovieDetails(movie) {
+    movieDetails.innerHTML = 
+        <h2>${movie.title}</h2>
+        <p><strong>Синопсис:</strong> ${movie.overview}</p>
+        <p><strong>Рейтинг:</strong> ${movie.vote_average} / 10</p>
+        <p><strong>Длительность:</strong> ${movie.runtime} минут</p>
+        <h3>Актерский состав:</h3>
+        <ul id="cast-list"></ul>
+        <h3>Отзывы пользователей:</h3>
+        <div id="reviews"></div>
+        <h3>Трейлер:</h3>
+        <div id="trailer-video"></div>
+    ;
+    fetchCast(movie.id);
+    fetchReviews(movie.id);
+    fetchTrailer(movie.id);
+    movieDetailsModal.style.display = 'block'; // Show modal
+}
+
+// Fetch cast information
+async function fetchCast(movieId) {
+    const response = await fetch(https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${apiKey});
+    const data = await response.json();
+    const castList = document.getElementById('cast-list');
+    castList.innerHTML = '';
+    data.cast.forEach(member => {
+        const li = document.createElement('li');
+        li.innerText = member.name;
+        castList.appendChild(li);
+    });
+}
+
+// Fetch user reviews
+async function fetchReviews(movieId) {
+    const response = await fetch(https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${apiKey});
+    const data = await response.json();
+    const reviewsContainer = document.getElementById('reviews');
+    reviewsContainer.innerHTML = '';
+    if (data.results.length === 0) {
+        reviewsContainer.innerText = 'Нет доступных отзывов.';
+    } else {
+        data.results.forEach(review => {
+            const reviewDiv = document.createElement('div');
+            reviewDiv.innerHTML = 
+                <p><strong>${review.author}:</strong> ${review.content}</p>
+            ;
+            reviewsContainer.appendChild(reviewDiv);
+        });
+    }
+}
+
+// Fetch movie trailer
+async function fetchTrailer(movieId) {
+    const response = await fetch(https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=${apiKey});
+    const data = await response.json();
+    const trailerVideo = document.getElementById('trailer-video');
+    trailerVideo.innerHTML = '';
+    const trailer = data.results.find(video => video.type === 'Trailer');
+    if (trailer) {
+        const iframe = document.createElement('iframe');
+        iframe.src = https://www.youtube.com/embed/${trailer.key};
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        trailerVideo.appendChild(iframe);
+        trailerVideo.style.display = 'block'; // Show trailer video
+    } else {
+        trailerVideo.innerText = 'Трейлер недоступен.';
+    }
+}
+
+// Add movie to watchlist
+function addToWatchlist(id, title, posterPath) {
+    const movieExists = watchlist.some(movie => movie.id === id);
+    if (!movieExists) {
+        const movie = { id, title, poster_path: posterPath }; // Create movie object
+        watchlist.push(movie); // Add movie to the watchlist array
+        localStorage.setItem('watchlist', JSON.stringify(watchlist)); // Update local storage
+        alert(${title} successfully added to Whishlist!); // Notification
+    } else {
+        alert(${title} already in ur Whishlist.); // Notification if already added
+    }
+}
+
+// Open wishlist modal
+viewWishlistButton.onclick = () => {
+    displayWishlist(); // Call to display current wishlist
+    wishlistContainer.style.display = 'block'; // Show wishlist modal
+};
+
+// Display wishlist movies
+function displayWishlist() {
+    const wishlistContent = document.getElementById('wishlist-content');
+    wishlistContent.innerHTML = ''; // Clear previous wishlist content
+    if (watchlist.length === 0) {
+        wishlistContent.innerText = 'Your whishlist is empty.'; // Message for empty wishlist
+    } else {
+        watchlist.forEach(movie => {
+            const movieDiv = document.createElement('div');
+            movieDiv.classList.add('favorite-card');
+            movieDiv.innerHTML = 
+                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}" />
+                <h3>${movie.title}</h3>
+                <button onclick="removeFromWishlist(${movie.id})">Delete from WhishList</button>
+            ;
+            wishlistContent.appendChild(movieDiv); // Append movie to wishlist
+        });
+    }
+}
+
+// Remove movie from watchlist
+function removeFromWishlist(movieId) {
+    watchlist = watchlist.filter(movie => movie.id !== movieId); // Filter out the movie to remove
+    localStorage.setItem('watchlist', JSON.stringify(watchlist)); // Update local storage
+    displayWishlist(); // Refresh the wishlist display
+}
+
+// Close wishlist modal with the close button and the close wishlist button
+document.getElementById('close-wishlist').onclick = () => {
+    wishlistContainer.style.display = 'none'; // Hide wishlist modal
+};
+
+document.getElementById('close-wishlist-button').onclick = () => {
+    wishlistContainer.style.display = 'none'; // Hide wishlist modal
+};
+
+// Close modals with Escape key
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        if (movieDetailsModal.style.display === 'block') {
+            movieDetailsModal.style.display = 'none'; // Hide movie details modal
+        }
+        if (wishlistContainer.style.display === 'block') {
+            wishlistContainer.style.display = 'none'; // Hide wishlist modal
+        }
+    }
+});
+
+// Close movie details modal with the close button
+closeButton.onclick = () => {
+    movieDetailsModal.style.display = 'none'; // Hide movie details modal
+};
+
+
+Добавь в мое приложение  Возможность сортировки фильмов по популярности, дате выхода или рейтингу.

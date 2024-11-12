@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header
+    <h1>Weather Finder</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" onkeyup="suggestCities()">
+    <div id="suggestions"></div>
+    <button onclick="fetchWeather()">Search</button>
+    <button onclick="getCurrentLocation()">Use My Location</button>
+    <button onclick="toggleUnit()">°C / °F</button>
+  </header>
+  <main>
+    <section id="currentWeather">
+      <h2>Current Weather</h2>
+      <div id="currentWeatherInfo"></div>
+    </section>
+    <section id="forecast">
+      <h2>5-Day Forecast</h2>
+      <div id="forecastGrid"></div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

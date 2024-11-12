@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1></h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search movies...">
+      <div id="suggestion-box"></div>
+    </div>
+    <button id="view-wishlist">Wishlist</button>
+    <select id="sort-select">
+      <option value="popularity.desc">Sort by Popularity</option>
+      <option value="release_date.desc">Sort by Release Date</option>
+      <option value="vote_average.desc">Sort by Rating</option>
+    </select>
+  </header>
+
+  <main>
+    <div id="movie-grid"></div>
+  </main>
+
+  <div id="movie-details-modal" class="modal">
+    <div id="movie-details"></div>
+    <button id="close-button">Close</button>
+  </div>
+
+  <div id="wishlist" class="modal">
+    <div class="modal-content">
+        <span id="close-wishlist" class="close-button">&times;</span> <!-- Close button for modal -->
+        <h2>Wishlist</h2>
+        <div id="wishlist-content"></div>
+        <button id="close-wishlist-button">Закрыть</button> <!-- Close button for wishlist -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
